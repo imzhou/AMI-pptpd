@@ -1,11 +1,18 @@
 # Amazon Linux AMI
 
+yum remove -y pptpd ppp
+iptables --flush POSTROUTING --table nat
+iptables --flush FORWARD
+rm -rf /etc/pptpd.conf
+rm -rf /etc/ppp
+
 
 yum -y install rpm-build gcc
 yum -y install ppp
 
 mkdir ~/src
 cd ~/src
+
 # for 32bit
 # wget http://www.bradiceanu.net/files/pptpd-1.3.4-1.fc12.src.rpm
 # rpmbuild --rebuild pptpd-1.3.4-1.fc12.src.rpm
@@ -21,7 +28,7 @@ sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g' /etc/sysctl.conf
 sysctl -p
 echo "localip 192.168.240.1" >> /etc/pptpd.conf
 echo "remoteip 192.168.240.2-100" >> /etc/pptpd.conf
-echo "ms-dns 172.16.0.23" >> /etc/ppp/options.pptpd
+echo "ms-dns 114.114.114.114" >> /etc/ppp/options.pptpd
 echo "ms-dns 8.8.8.8" >> /etc/ppp/options.pptpd
 
 pass=`openssl rand 8 -base64`
